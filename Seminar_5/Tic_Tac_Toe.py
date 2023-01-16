@@ -24,10 +24,7 @@ class GameBoard:
                   self.board_data[2 + sep * 3],
                   self.SEPARATOR)
         print(self.LINE * self.LINE_SIZE)
-
-game = GameBoard(list(range(1,10)))
-game.draw_board()
-    
+        
 
 class Game(GameBoard):
     def __init__(self,
