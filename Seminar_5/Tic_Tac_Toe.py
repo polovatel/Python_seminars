@@ -24,7 +24,7 @@ class GameBoard:
                   self.board_data[2 + sep * 3],
                   self.SEPARATOR)
         print(self.LINE * self.LINE_SIZE)
-        
+
 
 class Game(GameBoard):
     def __init__(self,
@@ -35,13 +35,14 @@ class Game(GameBoard):
         self.player_token = player_token
 
     def input_values(self) -> str:
+        """Возвращает выбранную яйчейку для игры"""
         while True:
-            value = input('Выберети яичейку: ' + self.player_token)
+            value = input('Выберети яйчейку: ' + self.player_token + '?')
             if not(value in '123456789'):
                 print('Ошибка ввода! Выберете яичейку от 1 до 9!')
                 continue
             value = int(value)
-            if str(self.board_data[value- 1] in 'XO'):
+            if str(self.board_data[value- 1]) in 'XO':
                 print('Эта яйчейка уже используется, выберете другую!')
                 continue
             self.board_data[value - 1] = self.player_token
@@ -52,8 +53,9 @@ class WinCheking(GameBoard):
     WIN_COORD: tuple = [(1, 2, 3), (4, 5, 6), (7, 8, 9), # horizontal
                         (1, 4, 7), (2, 5, 8), (3, 6, 9), # vertical
                         (1, 5, 9), (3, 5, 7)] # diag
-
+    
     def check_win(self):
+        """Проверка введенных значений на выигрыш"""
         for all in self.WIN_COORD:
             if (self.board_data[all[0] - 1] == self.board_data[all[1] - 1] 
                 == self.board_data[all[2] - 1]):
@@ -63,30 +65,28 @@ class WinCheking(GameBoard):
 
 
 def main(gameboard: GameBoard,
-         game: Game,
+         values: Game,
          win: WinCheking):
+    """Инициализация запуска игры"""
     counter = 0
     while True:
-        gaming = gameboard.draw_board()
-        print(gaming(VALUES))
+        board = gameboard.draw_board(VALUES)
+        print(board)
         if counter % 2 == 0:
-            x = game.input_values('X')
-            
+            GameBoard.input_values('X')
         else:
-            o = game.input_values('O')
+            values.input_values('O')
         if counter > 3:
             winner = win.check_win()
-            if winner:
-                gaming
-                print(winner, 'Выиграл')
-                break
+            print(winner, 'выиграл!')
+            break
         counter += 1
-
-        if counter > COUNTER1:
-            print('Ничья!')
+        if counter > 8:
+            board.draw_board()
+            print('Ничья')
             break
 
-
+main(VALUES, VALUES, VALUES)
 
     
 
