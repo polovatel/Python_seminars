@@ -1,7 +1,7 @@
 COUNTER = 0
-COUNTER1 = 8
 VALUES = list(range(1,10))
-
+MAX_VALUES_IN_GAME = 8
+MAX_VALUES_FOR_WIN = 3
 class GameBoard:
     SEPARATOR = '|'
     LINE = '-'
@@ -76,12 +76,12 @@ def main(gameboard: GameBoard,
             GameBoard.input_values('X')
         else:
             values.input_values('O')
-        if counter > 3:
+        if counter > MAX_VALUES_FOR_WIN:
             winner = win.check_win()
             print(winner, 'выиграл!')
             break
         counter += 1
-        if counter > 8:
+        if counter > MAX_VALUES_IN_GAME:
             board.draw_board()
             print('Ничья')
             break
