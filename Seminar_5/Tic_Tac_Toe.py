@@ -1,93 +1,78 @@
-COUNTER = 0
-VALUES = list(range(1,10))
-MAX_VALUES_IN_GAME = 8
-MAX_VALUES_FOR_WIN = 3
-class GameBoard:
-    SEPARATOR = '|'
-    LINE = '-'
-    SQUARE_SIZE = 3
-    LINE_SIZE = 13
-    
-    def __init__(self,
-                board_data: list):       
-        self.board_data = board_data
-
-    def draw_board(self) -> str:
-        """Возвращает поле для игры"""
-        print(self.LINE * self.LINE_SIZE)
-        for sep in range(self.SQUARE_SIZE):
-            print(self.SEPARATOR, 
-                  self.board_data[0 + sep * 3],
-                  self.SEPARATOR, 
-                  self.board_data[1 + sep * 3],
-                  self.SEPARATOR, 
-                  self.board_data[2 + sep * 3],
-                  self.SEPARATOR)
-        print(self.LINE * self.LINE_SIZE)
+# размер в клетках для игрового поля
+board_size = 3
+# игровое поле
+board = [1,2,3,4,5,6,7,8,9]
 
 
-class Game(GameBoard):
-    def __init__(self,
-                 board_data: list,
-                 player_token: str):
-        super().__init__(self, board_data)
-        self.board_data = board_data
-        self.player_token = player_token
+def draw_board():
+	''' Выводим игровое поле '''
+	print (('_' * 4 * board_size ))
+	for i in range(board_size):
+		print ((' ' * 3 + '|') * 3)
+		print ('',board[i*3], '|', board[1+i*3], '|', board[2+i*3], '|')
+		print (('_' * 3 + '|') * 3)
 
-    def input_values(self) -> str:
-        """Возвращает выбранную яйчейку для игры"""
-        while True:
-            value = input('Выберети яйчейку: ' + self.player_token + '?')
-            if not(value in '123456789'):
-                print('Ошибка ввода! Выберете яичейку от 1 до 9!')
-                continue
-            value = int(value)
-            if str(self.board_data[value- 1]) in 'XO':
-                print('Эта яйчейка уже используется, выберете другую!')
-                continue
-            self.board_data[value - 1] = self.player_token
-            break
+def check_win():
+	''' Проверяем победу одного из игроков '''
+	win = False
 
+	win_combination = (
+		(0,1,2), (3,4,5), (6,7,8),	# горизонтальные линии
+		(0,3,6), (1,4,7), (2,5,8),	# вертикальные линии
+		(0,4,8), (2,4,6) 			# диагональные линии
+	)
 
-class WinCheking(GameBoard):
-    WIN_COORD: tuple = [(1, 2, 3), (4, 5, 6), (7, 8, 9), # horizontal
-                        (1, 4, 7), (2, 5, 8), (3, 6, 9), # vertical
-                        (1, 5, 9), (3, 5, 7)] # diag
-    
-    def check_win(self):
-        """Проверка введенных значений на выигрыш"""
-        for all in self.WIN_COORD:
-            if (self.board_data[all[0] - 1] == self.board_data[all[1] - 1] 
-                == self.board_data[all[2] - 1]):
-                return self.board_data[all[1] - 1]
-            else:
-                return False
+	for pos in win_combination:
+		# если три ячейки совпадает
+		# для урока покажу вариант ниже
+		# len(set([board[pos[0]], board[pos[1]], board[pos[2]]]))
+		if (board[pos[0]] == board[pos[1]] and board[pos[1]] == board[pos[2]] and board[pos[1]] in ('X','O')):
+			win = board[pos[0]]
 
+	return win
 
-def main(gameboard: GameBoard,
-         values: Game,
-         win: WinCheking):
-    """Инициализация запуска игры"""
-    counter = 0
-    while True:
-        board = gameboard.draw_board(VALUES)
-        print(board)
-        if counter % 2 == 0:
-            GameBoard.input_values('X')
-        else:
-            values.input_values('O')
-        if counter > MAX_VALUES_FOR_WIN:
-            winner = win.check_win()
-            print(winner, 'выиграл!')
-            break
-        counter += 1
-        if counter > MAX_VALUES_IN_GAME:
-            board.draw_board()
-            print('Ничья')
-            break
+def game_step(index, char):
+	''' Функция хода игрока '''
+	if (index > 10 or index < 1 or board[index-1] in ('X','O')):
+		return False
 
-main(VALUES, VALUES, VALUES)
+	board[index-1] = char
+	return True
 
-    
+def start_game():
+	# текущий игрок
+	current_player = 'X'
+	# номер шага
+	step = 1
 
+	draw_board()
 
+	# игра продолжается до тех пор, пока кто-то не выиграет или выйдет
+	while (step < 9) and (check_win() == False):
+		index = input('Ходит ' + current_player + '. Введите номер поля (0 - выход):')
+
+		if (int(index) == 0):
+			break
+
+		# если получилось сделать шаг
+		if (game_step(int(index), current_player)):
+			print('Удачный ход')
+
+			if (current_player == 'X'):
+				current_player = 'O'
+			else:
+				current_player = 'X'
+
+			draw_board()
+			# увеличим номер шага
+			step += 1
+		else:
+			print('Неверный номер! Повторите!')
+
+	if (step == 9):
+		print('Игра оконцена. Ничья!')
+	else:
+		print('Выиграл ' + check_win())
+
+print('Добро пожаловать в игру!')
+start_game()
