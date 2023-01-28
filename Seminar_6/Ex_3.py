@@ -1,6 +1,7 @@
 # 3) Напишите программу, которая принимает на вход вещественное число и показывает сумму его цифр.
 
-real_number = int(input('Input real number: '))
+def sum_digit(number):
+    return sum(map(int, number.replace('.', '').replace('-', '')))
 
-sum_of_digits = sum(map(int, str(real_number)))
-print(sum_of_digits)
+num = input('Input real number: ')
+print(f'Som of digits in real number is: {sum_digit(num)}')
