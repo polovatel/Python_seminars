@@ -1,3 +1,5 @@
+'''Ввод информации о контакте'''
+
 def surname_of_contact():
     return input('Input surname: ')
     

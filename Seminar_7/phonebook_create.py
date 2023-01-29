@@ -1,8 +1,8 @@
 import sqlite3
 import contact_details as info
+import program_checks as check
 
-sqlite_file = "C:\\Users\\Lenovo\\Desktop\\GeekBrains\\Python_Learning\\Phyton_Seminars\\Seminars\\Seminar_7\\phonebook.db"
-con = sqlite3.connect(sqlite_file)
+con = sqlite3.connect('phonebook.db')
 cur = con.cursor()
 
 def create_phonebook():
@@ -13,11 +13,11 @@ def create_phonebook():
                     phone INTEGER,
                     description TEXT)
                     """)
-    con.commit()
-    cur.close()
+    print('PhoneBook succesfully created!')
 
 def insert_new_phone():
     '''Записывает новый контакт в телефонную книгу'''
+    check.is_table_exist()
     surname: str = info.surname_of_contact()
     name: str = info.name_of_contact()
     phone: int = info.phone_number()
@@ -26,6 +26,7 @@ def insert_new_phone():
                 VALUES ('{surname}', '{name}',
                 '{phone}', '{description}')
                 ''')
-    print('Contact information sucesfully saved')
+    print('Contact information sucesfully saved!')
+
     con.commit()
     cur.close()
